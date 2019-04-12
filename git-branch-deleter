@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# list here the branches you never ever  want to delete
+protected=("master" "develop")
+
+for branch in $(git for-each-ref --format='%(refname)' refs/heads/); do
+  br=${branch:11}
+  echo ""
+
+  # If branch name is in the protected array, we just skip
+  if [[ " ${protected[@]} " =~ " ${br} " ]]; then
+    continue;
+  fi
+
+  echo "Branch name: $(tput setaf 6) ${br} $(tput sgr 0)"
+  echo "Delete this branch? y/n"
+  read n
+  case $n in
+    'y') git branch -d $br;;
+    'n') echo "Skipping...";;
+    *) echo "Invalid command, skipping...";;
+  esac
+done
+
+echo "bye."
